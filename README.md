@@ -6,6 +6,6 @@
 
 # Para ejecutar
 
-## primero: npm install
+## > npm install
 
-## después: npm run serve
+## > npm run serve
