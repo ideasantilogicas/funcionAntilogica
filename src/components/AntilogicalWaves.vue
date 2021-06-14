@@ -6,44 +6,44 @@
 <template>
 
     <div>
-        <!--*********************
-        *    FUNCTION INPUT     *
-        **********************-->
+        <!--******************************
+        *    ENTRADA/INPUT DE LA FUNCIÓN *
+        *******************************-->
         <div class="function">antilogicalWaves
             ( input: <input type="text" id="functionInput" size="3" class="functionInput" v-model="inputValue" @keyup="runWaves()"> )
         </div>
         <!--***********************
-        *    PARENTESIS/WAVES     *
+        *    PARENTESIS/ONDAS     *
         ************************-->
         <div class="parentesis">
             <span v-for="element in results" :key="element.result" :style="element.parentesisStyle">) </span>
         </div>
-        <!--**********************************************************
-        *    MAIN CONTAINER (OUTPUTS, DISTANCES, FUNCTION IMAGE)     *
-        ***********************************************************-->
+        <!--*******************************************************************************
+        *    CONTENEDOR FLEXBOX PRINCIPAL (SALIDAS, DISTANCIAS, IMAGEN DE LA FUNCIÓN)     *
+        ********************************************************************************-->
         <div class="mainContainer">
-            <!--*****************************************************************
-            *    OUTPUT LIST                                                    *
-            *       TO GET EVERY NUMBER, THE FUNCTION IS EXECUTED input TIMES   *
-            *       EVERY OUTPUT IS PUSHED INTO THE results ARRAY               *
-            ******************************************************************-->
+            <!--*****************************************************************************
+            *    LISTA DE SALIDAS                                                           *
+            *       PARA OBTENER CADA NUMERO DE SALIDA, LA FUNCIÓN ES EJECUTADA input VECES *
+            *       CADA SALIDA (output) ES INSERTADA EN EL ARRAY results                   *
+            ******************************************************************************-->
             <div class="functionOutput" v-if="results.length > 0">
                 <div>Outputs (from 1 to {{results.length}}):</div>
                 <span v-for="output in results" :key="output.result">{{ output.result }}, </span>
             </div>
             <br>
-            <!--***************************************************************************
-            *    DISTANCES LIST                                                           *
-            *       - EVERY DISTANCE IS CALCULATED SUBTRACTING                            *
-            *           THE CURRENT RESULT TO THE PREVIOUS RESULT (EXCEPT THE FIRST ONE)  *
-            *       - EVERY DISTANCE IS PUSHED INTO THE distancesBetweenResults ARRAY     *
-            ****************************************************************************-->
+            <!--******************************************************************************
+            *    LISTA DE DISTANCIAS                                                         *
+            *       - CADA SALIDA ES CALCULADA RESTANDO EL RESULTADO ACTUAL                  *
+            *               MENOS EL RESULTADO ANTERIOR (EXCEPTO EL PRIMERO, OBVIAMENTE)     *
+            *       - CADA DISTANCIA ES INSERTADA EN EL ARRAY distancesBetweenResults        *
+            *******************************************************************************-->
             <div class="distancesBetweenResults" v-if="distancesBetweenResults.length > 0">
                 <div>Distances between results:</div>
                 <span v-for="element in distancesBetweenResults" :key="element.previousIndex">{{ element.distance }}, </span>
             </div>
             <!--*************************************
-            *     IMAGE THAT SHOWS THE FUNCTION     *  
+            *     IMAGEN QUE MUESTRA LA FUNCIÓN     *  
             **************************************-->
             <div class="imgContainer">
                 <img src="../assets/antilogicalWavesFunction.png" class="img">
@@ -72,9 +72,10 @@ export default {
         }
     },
     methods: {
-        /*************************************************************
-         *   EXECUTES THE antilogicalWaves(input) inputValue TIMES   *
-         ************************************************************/
+        /*********************************************************************
+         *   EJECUTA LA FUNCIÓN antilogicalWaves(input) LA CANTIDAD VECES    *
+         *          LA CANTIDAD DE VECES INGRESADA POR TECLADO (inputValue)  *
+         *********************************************************************/
         runWaves: function() {
             if(isNaN(parseInt(this.inputValue)) || parseInt(this.inputValue) < 1)
                 return
@@ -103,62 +104,71 @@ export default {
                 }, 500)
             }
         },
-        /********************************************************************************************
-         *  antilogicalWaves(input):                                                                *
-         *      -RECURSIVE FUNCTION THAT CALCULATES ITS RESULT                                      *
-         *          DOING CONSECUTIVE CALLS TO ITSELF WITH THE INPUT LESS 1                         *
-         *      - WHEN THE input FINALLY GETS TO BE 0, BEGINS THE CONSECUTIVE RETURNS,              *
-         *          ADDING EACH RETURN TO THE FINAL RESULT                                          *
-         *                                                                                          *
-         *  WANNA TRY TO UNDERESTAND THIS? LET'S GO!!                                               *
-         *                                                                                          *
-         *  EXAMPLE FOR antilogicalWaves(3):                                                        *
-         *  ===============================                                                         *
-         *                                                                                          *
-         *  RESULT: 6                                                                               *
-         *                                                                                          *
-         *  CALL STACK:                                                                             *
-         *      TOP OF THE STACK>   antilogicalWaves(3)                                             *
-         *                          antilogicalWaves(2)                                             *
-         *                          antilogicalWaves(1)                                             *
-         *                          antilogicalWaves(0)    <BOTTOM OF THE STACK                     *
-         *                                                                                          *
-         *  RESOLUTION:                                                                             *
-         *  antilogicalWaves(3) = 3 + antilogicalWaves(2)                                           *
-         *                            >> return 2 + antilogicalWaves(1)                             *
-         *                                          >> return 1 + antilogicalWaves(0)               *
-         *                                                        >>    return 0                    *
-         *                                                                                          *
-         *  EXPLANATION:                                                                            *
-         *          antilogicalWaves(3) WILL return (3 + antilogicalWaves(2))                       *
-         *          BUT, TO GET THE FINAL RESULT, WILL NEED TO EXECUTE antilogicalWaves(2) FIRST    *
-         *          SO, antilogicalWaves(2) WILL return (2 + antilogicalWaves(1))                   *
-         *          BUT, TO GET THE RESULT, WILL NEED TO EXECUTE antilogicalWaves(1) FIRST          *
-         *          SO, antilogicalWaves(1) WILL return (1 + antilogicalWaves(0))                   *
-         *          BUT, TO GET THE RESULT, WILL NEED TO EXECUTE antilogicalWaves(0) FIRST          *
-         *          FINALLY, antilogicalWaves(0) WILL ALWAYS RETURN 0.                              *
-         *          AT THIS POINT, EVERY antilogicalWaves() CALL IS WAITING TO BE RESOLVED.         *
-         *          ONCE IT GETS TO RETURN 0, BEGINS THE BACKWARD RESOLUTION, IN OTHER WORDS,       *
-         *          THE STACK BEGINS TO RESOLVE FROM BOTTOM TO TOP:                                 *
-         *                                                                                          *
-         *              SO, antilogicalWaves(0) RETURNS 0                                           *
-         *              THEN: THE PREVIOUS CALL antilogicalWaves(1) RETURNS 1 BECAUSE:              *
-         *                          1 + antilogicalWaves(0) RETURNS 1 (1 + 0)                       *
-         *              THEN: THE PREVIOUS CALL antilogicalWaves(2) RETURNS 3 BECAUSE:              *
-         *                          (2 + antilogicalWaves(1)) RETURNS 3 (2 + 1)                     *
-         *              FINALLY: THE PREVIOUS CALL antilogicalWaves(3) RETURNS 6 BECAUSE:           *
-         *                          (3 + antilogicalWaves(2)) RETURNS 6 (3 + 3)                     *
-         *                                                                                          *
-         *  STACK RESOLUTION SUMMARY (IN RECURSIVE FUNCTIONS IS ALWAYS FROM BOTTOM TO TOP):         *
-         *                                                                                          *
-         *          TOP>     3 + 3 = 6                                                              *
-         *                   2 + 1 = 3                                                              *
-         *                   1 + 0 = 1                                                              *
-         *                   0          <BOTTOM                                                     *
-         *                                                                                          *
-         * TRY TO EXPLAIN antilogicalWaves(5) TO YOURSELF TO MASTER RECURSIVE FUNCTIONS!            *
-         * 
-         ********************************************************************************************/
+        /************************************************************************************************
+         *  antilogicalWaves(input):                                                                    *
+         *      -FUNCIÓN RECURSIVA QUE CALCULA SU RESULTADO REALIZANDO LLAMADAS A SÍ MISMA              *
+         *          CON EL NÚMERO RECIBIDO input RESTÁNDOLE 1 CADA VEZ                                  *
+         *      - CUANDO input FINALMENTE LLEGA A 0, COMIENZAN LOS return CONSECUTIVOS,                 *
+         *          SUMANDO CADA RETORNO AL RESULTADO FINAL                                             *
+         *                                                                                              *
+         *  QUIERES INTENTAR ENTENDER ESTO EN DETALLE? LET'S GO!!                                       *
+         *                                                                                              *
+         *  EJEMPLO PARA antilogicalWaves(3):                                                           *
+         *  ================================                                                            *
+         *                                                                                              *
+         *  RESULTADO ESPERADO: 6                                                                       *
+         *                                                                                              *
+         *  PILA DE LLAMADAS SUCESIVAS A LA FUNCIÓN :                                                   *
+         *                                                                                              *   
+         *     PRIMERA LLAMADA>     antilogicalWaves(3)                                                 *   
+         *                          |                                                                   *
+         *     SEGUNDA LLAMADA>     |-> antilogicalWaves(2)                                             *
+         *                              |                                                               *
+         *     TERCERA LLAMADA>         |-> antilogicalWaves(1)                                         *
+         *                                  |                                                           *
+         *      ÚLTIMA LLAMADA>             |-> antilogicalWaves(0)                                     *
+         *                                                                                              *
+         *  RESOLUCIÓN:                                                                                 *
+         *  antilogicalWaves(3) = 3 + antilogicalWaves(2)                                               *
+         *                            |-> return 2 + antilogicalWaves(1)                                *
+         *                                           |-> return 1 + antilogicalWaves(0)                 *
+         *                                                          |-> return 0                        *
+         *                                                                                              *
+         *  EXPLICACIÓN:                                                                                *
+         *          antilogicalWaves(3) DEBE RETORNAR: (3 + antilogicalWaves(2))                        *
+         *          PERO, PARA OBTENER EL RESULTADO FINAL, PRIMERO DEBE EJECUTAR antilogicalWaves(2)    *
+         *          ENTONCES: antilogicalWaves(2) DEBE RETORNAR: (2 + antilogicalWaves(1))              *
+         *          PERO, PARA OBTENER EL RESULTADO, PRIMERO DEBE EJECUTAR antilogicalWaves(1)          *
+         *          ENTONCES: antilogicalWaves(1) DEBE RETORNAR (1 + antilogicalWaves(0))               *
+         *          PERO, PARA OBTENER EL RESULTADO, PRIMERO DEBE EJECUTAR antilogicalWaves(0)          *
+         *          FINALMENTE, LA EJECUCIÓN DE antilogicalWaves(0) RETORNA 0 COMO SIEMPRE.             *
+         *                                                                                              *
+         *          EN ESTE PUNTO, CADA LLAMADA A LA FUNCIÓN antilogicalWaves() ESTÁ ESPERANDO          *
+         *          AL RESTO PARA RESOLVERSE.                                                           *
+         *          UNA VEZ QUE SE LLEGA A LA LLAMADA QUE RETORNA 0, COMIENZA LA RESOLUCIÓN DE CADA     *
+         *          LLAMADA (EN ORDEN INVERSO), DICHO DE OTRA MANERA,                                   *
+         *          LA PILA DE LLAMADAS EMPIEZA A RESOLVERSE DESDE LA ÚLTIMA LLAMADA                    *
+         *          HASTA LA PRIMERA:                                                                   *
+         *                                                                                              *
+         *              ENTONCES: antilogicalWaves(0) RETORNA 0                                         *
+         *              LUEGO: LA LLAMADA ANTERIOR antilogicalWaves(1) RETORNA 1 PORQUE:                *
+         *                          1 + antilogicalWaves(0) ES LO MISMO QUE (1 + 0)                     *
+         *              LUEGO: LA LLAMADA ANTERIOR antilogicalWaves(2) RETORNA 3 PORQUE:                *
+         *                          (2 + antilogicalWaves(1)) ES LO MISMO QUE (2 + 1)                   *
+         *              FINALMENTE: LA LLAMADA ANTERIOR antilogicalWaves(3) RETORNA 6 PORQUE:           *
+         *                          (3 + antilogicalWaves(2)) ES LO MISMO QUE (3 + 3)                   *
+         *                                                                                              *
+         *  RESUMEN DE LLAMADAS A LA FUNCIÓN antilogicalWaves(3)                                        *
+         *      (LAS FUNCIONES RECURSIVAS SE RESUELVEN DESDE LA ÚLTIMA LLAMADA HACIA LA PRIMERA):       *
+         *                                                                                              *
+         *         PRIMERA>  3 + 3 = 6                                                                  *
+         *         SEGUNDA>  2 + 1 = 3                                                                  *
+         *         TERCERA>  1 + 0 = 1                                                                  *
+         *          ÚLTIMA>          0                                                                  *
+         *                                                                                              *
+         * TRATA DE EXPLICAR antilogicalWaves(5) A TI MISMO Y DOMINAR LAS FUNCIONES RECURSIVAS!         *
+         *                                                                                              *
+         ************************************************************************************************/
         antilogicalWaves: function(input) {
             if(input == 0)
                 return 0
